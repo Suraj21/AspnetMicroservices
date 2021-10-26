@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Behaviours\" />
     <Folder Include="Features\Orders\CheckoutOrder\" />
     <Folder Include="Features\Orders\Queries\DeleteOrder\" />
     <Folder Include="Features\Orders\Queries\UpdateOrder\" />
