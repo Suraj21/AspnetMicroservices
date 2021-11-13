@@ -6,11 +6,11 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["APIGateways/Shopping.Aggregator/Shopping.Aggregator.csproj", "APIGateways/Shopping.Aggregator/"]
+COPY ["ApiGateways/Shopping.Aggregator/Shopping.Aggregator.csproj", "ApiGateways/Shopping.Aggregator/"]
 COPY ["BuildingBlocks/Common.Logging/Common.Logging.csproj", "BuildingBlocks/Common.Logging/"]
-RUN dotnet restore "APIGateways/Shopping.Aggregator/Shopping.Aggregator.csproj"
+RUN dotnet restore "ApiGateways/Shopping.Aggregator/Shopping.Aggregator.csproj"
 COPY . .
-WORKDIR "/src/APIGateways/Shopping.Aggregator"
+WORKDIR "/src/ApiGateways/Shopping.Aggregator"
 RUN dotnet build "Shopping.Aggregator.csproj" -c Release -o /app/build
 
 FROM build AS publish
