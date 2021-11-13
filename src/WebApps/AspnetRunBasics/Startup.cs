@@ -1,6 +1,7 @@
 using AspnetRunBasics.Data;
 using AspnetRunBasics.Repositories;
 using AspnetRunBasics.Services;
+using Common.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -45,8 +46,11 @@ namespace AspnetRunBasics
 
             #endregion
 
+            services.AddTransient<LoggingDelegatingHandler>();
+
             services.AddHttpClient<ICatalogService, CatalogService>(c =>
-                c.BaseAddress = new Uri(Configuration["ApiSettings:GatewayAddress"]));
+                c.BaseAddress = new Uri(Configuration["ApiSettings:GatewayAddress"]))
+                .AddHttpMessageHandler<LoggingDelegatingHandler>();
             services.AddHttpClient<IBasketService, BasketService>(c =>
                 c.BaseAddress = new Uri(Configuration["ApiSettings:GatewayAddress"]));
             services.AddHttpClient<IOrderService, OrderService>(c =>
