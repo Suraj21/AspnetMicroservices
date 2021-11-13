@@ -186,7 +186,7 @@ services:
   kibana:
     container_name: kibana
     environment:
-        - ELASTICSEARCH_URL=http://elasticsearch
+        - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
         - elasticsearch
     ports:
