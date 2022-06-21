@@ -31,6 +31,7 @@ namespace Movies.API.Controllers
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new Movie
             {
+                Id = index,
                 Name = Movies[rng.Next(Movies.Length)]
             })
             .ToArray();

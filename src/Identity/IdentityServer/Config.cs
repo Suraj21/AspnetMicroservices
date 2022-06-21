@@ -31,11 +31,11 @@ namespace IdentityServer
                        AllowRememberConsent = false,
                        RedirectUris = new List<string>()
                        {
-                           "https://localhost:5002/signin-oidc"
+                           "https://localhost:40083/signin-oidc"
                        },
                        PostLogoutRedirectUris = new List<string>()
                        {
-                           "https://localhost:5002/signout-callback-oidc"
+                           "https://localhost:40083/signout-callback-oidc"
                        },
                        ClientSecrets = new List<Secret>
                        {
@@ -56,7 +56,7 @@ namespace IdentityServer
         public static IEnumerable<ApiScope> ApiScopes =>
            new ApiScope[]
            {
-               new ApiScope("moviesAPI", "Basket API")
+               new ApiScope("moviesAPI", "Movies API")
            };
 
         public static IEnumerable<ApiResource> ApiResources =>
@@ -70,12 +70,12 @@ namespace IdentityServer
           {
               new IdentityResources.OpenId(),
               new IdentityResources.Profile(),
-              new IdentityResources.Address(),
-              new IdentityResources.Email(),
-              new IdentityResource(
-                    "roles",
-                    "Your role(s)",
-                    new List<string>() { "role" })
+              //new IdentityResources.Address(),
+              //new IdentityResources.Email(),
+              //new IdentityResource(
+              //      "roles",
+              //      "Your role(s)",
+              //      new List<string>() { "role" })
           };
 
         public static List<TestUser> TestUsers =>
@@ -84,8 +84,8 @@ namespace IdentityServer
                 new TestUser
                 {
                     SubjectId = "5BE86359-073C-434B-AD2D-A3932222DABE",
-                    Username = "mehmet",
-                    Password = "swn",
+                    Username = "ssuraj",
+                    Password = "suraj",
                     Claims = new List<Claim>
                     {
                         new Claim(JwtClaimTypes.GivenName, "sachidanand"),
