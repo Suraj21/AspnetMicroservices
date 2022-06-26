@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using IdentityModel;
+using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Movies.Client.APIServices;
+using Movies.Client.HttpHandler;
 
 namespace Movies.Client
 {
@@ -40,11 +44,12 @@ namespace Movies.Client
                     options.ClientSecret = "secret";
                     options.ResponseType = "code id_token";
 
-                    options.Scope.Add("openid");
-                    options.Scope.Add("profile");
-                    //options.Scope.Add("address");
-                    //options.Scope.Add("email");
-                    //options.Scope.Add("roles");
+                    //options.Scope.Add("openid");
+                    //options.Scope.Add("profile");
+                    options.Scope.Add("address");
+                    options.Scope.Add("email");
+                    options.Scope.Add("roles");
+                    options.Scope.Add("moviesAPI");
 
                     options.ClaimActions.DeleteClaim("sid");
                     options.ClaimActions.DeleteClaim("idp");
@@ -52,17 +57,41 @@ namespace Movies.Client
                     options.ClaimActions.DeleteClaim("auth_time");
                     options.ClaimActions.MapUniqueJsonKey("role", "role");
 
-                    options.Scope.Add("moviesAPI");
-
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
 
-                    //options.TokenValidationParameters = new TokenValidationParameters
-                    //{
-                    //    NameClaimType = JwtClaimTypes.GivenName,
-                    //    RoleClaimType = JwtClaimTypes.Role
-                    //};
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = JwtClaimTypes.GivenName,
+                        RoleClaimType = JwtClaimTypes.Role
+                    };
                 });
+
+            services.AddTransient<AuthenticationDelegatingHandler>();
+
+            services.AddHttpClient("MoviesAPIClient", client =>
+            {
+                client.BaseAddress = new System.Uri("http://localhost:5000");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
+
+            services.AddHttpClient("IDPClient", client =>
+            {
+                client.BaseAddress = new System.Uri("https://localhost:5001");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            });
+
+            services.AddHttpContextAccessor();
+
+            //services.AddSingleton(new ClientCredentialsTokenRequest 
+            //{
+            //    Address = "https://localhost:5001/connect/token",
+            //    ClientId = "moviesClient",
+            //    ClientSecret = "secret",
+            //    Scope = "moviesAPI"
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
